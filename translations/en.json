@@ -1,0 +1,11 @@
+{
+	"label": "Used on",
+	"count": ["Unused", "Used on 1 page", "Used on {{ count }} pages"],
+	"empty": "Not used on any page",
+	"delete": ["", "The file is still used on 1 page and will be missing there after deletion:", "The file is still used on {{ count }} pages and will be missing there after deletion:"],
+	"more": "and {{ count }} more",
+	"hidden": "hidden",
+	"condition": "inactive",
+	"orphan": "field removed",
+	"changes": "unpublished"
+}
