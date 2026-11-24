@@ -2,7 +2,7 @@
 	"name": "tobimori/kirby-file-usage",
 	"description": "See where files are used in Kirby: on which pages, in which fields and blocks, and which files are not used at all",
 	"type": "kirby-plugin",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"license": "MIT",
 	"homepage": "https://github.com/tobimori/kirby-file-usage#readme",
 	"authors": [
