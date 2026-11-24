@@ -7,10 +7,14 @@ use Kirby\Cms\App;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Fieldsets;
 use Kirby\Cms\File;
+use Kirby\Cms\Inventory;
 use Kirby\Cms\Languages;
 use Kirby\Cms\ModelWithContent;
 use Kirby\Cms\Page;
+use Kirby\Cms\Site;
 use Kirby\Filesystem\Dir;
+use Kirby\Panel\Ui\Item\ModelItem;
+use Kirby\Panel\Ui\Item\PageItem;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
@@ -62,37 +66,41 @@ final class FileUsage
 	}
 
 	/**
-	 * Props for `k-item`, one item per referencing page that the user can list
+	 * The site and the pages that reference the file and that the user can list
 	 *
-	 * @return list<array{id: string, text: string, info: string, image: array<array-key, mixed>|null, link: string, status: string|null}>
+	 * @return list<Site|Page>
 	 */
-	public static function items(File $file): array
+	public static function models(File $file): array
 	{
 		$kirby = App::instance();
-		$items = [];
+		$models = [];
 
 		foreach (self::pages($file) as $id) {
 			$model = $id === '' ? $kirby->site() : $kirby->page($id);
 
-			if ($model === null || $model instanceof Page && $model->isListable() === false) {
-				continue;
+			if ($model instanceof Site || $model?->isListable() === true) {
+				$models[] = $model;
 			}
-
-			$panel = $model->panel();
-			$references = self::references($model, (string)self::id($file));
-			$places = array_unique(array_map(static fn (Reference $reference) => self::describe($model, $reference), $references));
-
-			$items[] = [
-				'id' => $id,
-				'text' => $model->toSafeString('{{ model.title }}'),
-				'info' => implode(', ', $places),
-				'image' => $panel->image([], 'list'),
-				'link' => $panel->url(true),
-				'status' => $model instanceof Page ? $model->status() : null
-			];
 		}
 
-		return $items;
+		return $models;
+	}
+
+	/**
+	 * Props for `k-item`, one item per model, with the places of the references as info
+	 *
+	 * @return list<array<string, mixed>>
+	 */
+	public static function items(File $file): array
+	{
+		$id = (string)self::id($file);
+
+		return array_map(static function (Site|Page $model) use ($id) {
+			$places = array_unique(array_map(static fn (Reference $reference) => self::describe($model, $reference), self::references($model, $id)));
+			$item = $model instanceof Page ? new PageItem(page: $model) : new ModelItem(model: $model);
+
+			return [...$item->props(), 'info' => implode(', ', $places)];
+		}, self::models($file));
 	}
 
 	/**
@@ -115,7 +123,7 @@ final class FileUsage
 
 		foreach (Dir::index($root, true) as $path) {
 			// skip folders that are not pages, e.g. `_trash` or `.git`
-			if (is_string($path) && str_ends_with($path, $extension) && !preg_match('#(^|/)(\.|_(?!drafts/|changes/))#', $path)) {
+			if (str_ends_with($path, $extension) && !preg_match('#(^|/)(\.|_(?!drafts/|changes/))#', $path)) {
 				$paths[] = $path;
 			}
 		}
@@ -139,7 +147,7 @@ final class FileUsage
 			}
 
 			$folders = array_filter(explode('/', $dir), static fn (string $folder) => $folder !== '' && $folder !== '_drafts');
-			$id = implode('/', array_map(static fn (string $folder) => (string)preg_replace('/^\d+' . Dir::$numSeparator . '/', '', $folder), $folders));
+			$id = implode('/', array_map(static fn (string $folder) => (string)preg_replace('/^\d+' . Inventory::$numSeparator . '/', '', $folder), $folders));
 
 			foreach ($files as $file) {
 				$index[$file][$id] = $id;
@@ -217,7 +225,7 @@ final class FileUsage
 			}
 		}
 
-		return Escape::html(implode(' › ', $path));
+		return implode(' › ', $path);
 	}
 
 	/**
@@ -367,6 +375,8 @@ final class FileUsage
 		}
 
 		try {
+			// the inherited type of `Items::factory()` misses that fieldsets can be type names
+			// @mago-expect analysis:less-specific-nested-argument-type
 			$fieldset = Fieldsets::factory($fieldsets)->get($type);
 		} catch (Throwable) {
 			$fieldset = null;

@@ -17,14 +17,12 @@ kirby_version="$(php -r '
 	}
 ')"
 
-# Kirby Starterkit at the same Kirby version as the plugin's lock file
+# Kirby Starterkit at the same Kirby version as the plugin's lock file. It bundles Kirby with
+# its dependencies, and its composer.json still requires Kirby 5, so don't run Composer in it
 if [[ ! -d "$playground" ]]; then
 	git -c advice.detachedHead=false clone --quiet --depth 1 --branch "$kirby_version" https://github.com/getkirby/starterkit.git "$playground"
 	rm -rf "$playground/.git"
 fi
-
-# Kirby pins exact dependency versions, so a security advisory must not block the install
-composer install --working-dir="$playground" --no-interaction --no-security-blocking
 
 mkdir -p "$playground/site/plugins"
 ln -sfn ../../.. "$playground/site/plugins/file-usage"
@@ -43,7 +41,7 @@ return [
 PHP
 fi
 
-# Usage section in the image blueprint, usage info in the album images
+# Usage field in the image blueprint, usage info in the album images
 php -r '
 	require $argv[1] . "/kirby/bootstrap.php";
 
@@ -51,7 +49,7 @@ php -r '
 
 	$file = $argv[1] . "/site/blueprints/files/image.yml";
 	$blueprint = Yaml::read($file);
-	$blueprint["columns"][1]["sections"]["usage"] ??= ["type" => "file-usage"];
+	$blueprint["columns"][1]["sections"]["meta"]["fields"]["usage"] ??= ["type" => "file-usage"];
 	Yaml::write($file, $blueprint);
 
 	$file = $argv[1] . "/site/blueprints/pages/album.yml";

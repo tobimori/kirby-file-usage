@@ -12,5 +12,6 @@ return array(
     'Kirby\\ComposerInstaller\\Plugin' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
     'Kirby\\ComposerInstaller\\PluginInstaller' => $vendorDir . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
     'tobimori\\FileUsage\\FileUsage' => $baseDir . '/classes/FileUsage.php',
+    'tobimori\\FileUsage\\FileUsageField' => $baseDir . '/classes/FileUsageField.php',
     'tobimori\\FileUsage\\Reference' => $baseDir . '/classes/Reference.php',
 );

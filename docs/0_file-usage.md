@@ -9,7 +9,7 @@ Kirby File Usage finds every page that references a file and shows it right in t
 
 ## Installation
 
-Kirby File Usage requires Kirby 5 and PHP 8.3 or later. In a terminal, go to the folder of your Kirby installation and run:
+Kirby File Usage requires Kirby 6 and PHP 8.3 or later. For Kirby 5, use version 0.1. In a terminal, go to the folder of your Kirby installation and run:
 
 ```bash
 composer require tobimori/kirby-file-usage
@@ -24,46 +24,46 @@ If you don't use Composer, download the latest release from [GitHub](https://git
 
 The plugin works with the content you already have. Kirby stores a reference to a file with the file's UUID, so the plugin finds existing references right away, including those in drafts and unpublished changes. You don't need to re-save pages or build an index. UUIDs are enabled by default, so unless you turned them off, there's nothing to configure.
 
-The delete warning works as soon as the plugin is installed. For everything else, add a section or a query to your blueprints, as shown below.
+The delete warning works as soon as the plugin is installed. For everything else, add a field or a query to your blueprints, as shown below.
 
 ## Where is this file used?
 
-Add the `file-usage` section to your file blueprint:
+Add the `file-usage` field to your file blueprint:
 
 ```yaml
 # site/blueprints/files/image.yml
-sections:
+fields:
   usage:
     type: file-usage
 ```
 
-The section lists every page that uses the file, and where on the page: a cover field, an image block inside a gallery, a link in a text. Uses that editors can't see on the website are marked, for example an image in a hidden block or in unpublished changes.
+The field lists every page that uses the file, and where on the page: a cover field, an image block inside a gallery, a link in a text. Uses that editors can't see on the website are marked, for example an image in a hidden block or in unpublished changes.
 
-![Used on section](used-on.png)
+![Used on field](used-on.png)
 
 ## Usage at a glance
 
-In a files section, you can show the usage as the info text. The label contains HTML, so use `{< >}` instead of `{{ }}`:
+In a `filelist` field, you can show the usage as the info text. The label contains HTML, so use `{< >}` instead of `{{ }}`:
 
 ```yaml
-sections:
+fields:
   images:
-    type: files
+    type: filelist
     info: "{< file.usageInfo >}"
 ```
 
 Unused files stand out in red.
 
-![Usage labels in a files section](usage-label.png)
+![Usage labels in a filelist field](usage-label.png)
 
 ## Find unused files
 
-For a cleanup list, filter a files section with `unused`:
+For a cleanup list, filter a `filelist` field with `unused`:
 
 ```yaml
-sections:
+fields:
   unused:
-    type: files
+    type: filelist
     query: page.files.unused
     create: false
 ```

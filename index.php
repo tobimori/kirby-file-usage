@@ -8,18 +8,21 @@ use Kirby\Data\Json;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Toolkit\A;
+use tobimori\FileUsage\FileUsageField;
 
 if (
-	version_compare(App::version() ?? '0.0.0', '5.0.0', '<') === true ||
-	version_compare(App::version() ?? '0.0.0', '6.0.0', '>=') === true
+	version_compare(App::version() ?? '0.0.0', '6.0.0', '<') === true ||
+	version_compare(App::version() ?? '0.0.0', '7.0.0', '>=') === true
 ) {
-	throw new Exception('Kirby File Usage requires Kirby 5');
+	throw new Exception('Kirby File Usage requires Kirby 6');
 }
 
 App::plugin(
 	'tobimori/file-usage',
 	extends: [
-		'sections' => require __DIR__ . '/config/sections.php',
+		'fields' => [
+			'file-usage' => FileUsageField::class
+		],
 		'areas' => require __DIR__ . '/config/areas.php',
 		'fileMethods' => require __DIR__ . '/config/file-methods.php',
 		'filesMethods' => require __DIR__ . '/config/files-methods.php',

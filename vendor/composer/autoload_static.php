@@ -35,6 +35,7 @@ class ComposerStaticInitc99ebef94f25a19081b0beffd766f3d1
         'Kirby\\ComposerInstaller\\Plugin' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/Plugin.php',
         'Kirby\\ComposerInstaller\\PluginInstaller' => __DIR__ . '/..' . '/getkirby/composer-installer/src/ComposerInstaller/PluginInstaller.php',
         'tobimori\\FileUsage\\FileUsage' => __DIR__ . '/../..' . '/classes/FileUsage.php',
+        'tobimori\\FileUsage\\FileUsageField' => __DIR__ . '/../..' . '/classes/FileUsageField.php',
         'tobimori\\FileUsage\\Reference' => __DIR__ . '/../..' . '/classes/Reference.php',
     );
 

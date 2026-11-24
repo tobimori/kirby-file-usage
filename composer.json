@@ -22,7 +22,7 @@
 	},
 	"require-dev": {
 		"carthage-software/mago": "^1.58.2",
-		"getkirby/cms": "^5.0.0"
+		"getkirby/cms": "^6.0.0"
 	},
 	"scripts": {
 		"analyze": "mago analyze",
@@ -43,6 +43,9 @@
 		}
 	},
 	"extra": {
+		"kirby": {
+			"compatible": "^6.0"
+		},
 		"kirby-cms-path": false
 	}
 }

@@ -5,7 +5,7 @@
 
 ---
 
-![Used on section with page status, reference locations and notes](docs/used-on.png)
+![Used on field with page status, reference locations and notes](docs/used-on.png)
 
 ## Get started
 
